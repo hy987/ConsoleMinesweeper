@@ -26,11 +26,22 @@ public:
 		}
 	}
 
+	Matrix(const Matrix& other)
+	{
+		copy_matrix(other);
+	}
+
+	Matrix& operator=(const Matrix& other)
+	{
+		del_matrix();
+		copy_matrix(other);
+
+		return *this;
+	}
+
 	~Matrix()
 	{
-		for (int i = 0; i < height; i++)
-			delete [] matrix[i];
-		delete [] matrix;
+		del_matrix();
 	}
 
 	void set_cell_value(int x, int y, T value)
@@ -66,6 +77,27 @@ public:
 private:
 	T** matrix;
 	int height, width;
+
+	void copy_matrix(const Matrix& other)
+	{
+		height = other.height;
+		width = other.width;
+
+		matrix = new T*[height];
+		for (int i = 0; i < height; i++)
+		{
+			matrix[i] = new T[width];
+			for (int j = 0; j < width; j++)
+				matrix[i][j] = other.matrix[i][j];
+		}
+	}
+
+	void del_matrix()
+	{
+		for (int i = 0; i < height; i++)
+			delete [] matrix[i];
+		delete [] matrix;
+	}
 };
 
 #endif

@@ -1,28 +1,15 @@
-#include "IntMatrix.h"
-#include "CharMatrix.h"
-
 #ifndef MINEFIELD_H
 #define MINEFIELD_H
+
+#include "Matrix.h"
 
 class MineField
 {
 public:
-	//конструктори
-	MineField();
 	MineField(int, int, int);
 
-	//мутатори
 	void set_cell_actual_value(int, int, int);
 	void set_cell_visual_value(int, int, char);
-	void set_mines();
-	void calculate_cells();
-	void alter_minefield(int, int, int);
-
-	
-	
-
-	//функции за достъп
-	int check_surrounding_cells(int, int) const;
 
 	int get_height() const
 	{
@@ -32,16 +19,6 @@ public:
 	int get_width() const
 	{
 		return width;
-	}
-
-	IntMatrix get_actual_field()  const
-	{
-		return actual_field;
-	}
-
-	CharMatrix get_visual_field() const
-	{
-		return visual_field;
 	}
 
 	int get_cell_actual_value(int x, int y) const
@@ -57,10 +34,14 @@ public:
 	void print() const;
 
 private:
-	//член данни
 	int height, width, mines;
-	IntMatrix actual_field;
-	CharMatrix visual_field;
+	
+	Matrix<int> actual_field;
+	Matrix<char> visual_field;
+
+	void set_mines();
+	void calculate_cells();
+	int check_surrounding_cells(int, int) const;
 };
 
 #endif

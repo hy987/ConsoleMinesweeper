@@ -1,29 +1,28 @@
-#include "MineField.h"
-
 #ifndef MINESWEEPER_H
 #define MINESWEEPER_H
+
+#include "MineField.h"
 
 class Minesweeper
 {
 public:
-	//конструктор
 	Minesweeper();
 
-	//мутатори
-	void set_mode();
 	void play_game();
-	void make_a_move(int, int, int);
-	void adjacent_empty_cells(int, int);
-
-	//функции за достъп
-	void menu() const;
-	void flushing_cin() const;
-	bool win_condition();
-	bool loss_condition(int, int);
 
 private:
 	enum {UNINITIALIZED, INITIALIZED, EXIT} state;
 	MineField playing_field;
+
+	void set_mode();
+	void make_a_step(int&, int&, int&) const;
+	void make_a_move(int, int, int);
+	void adjacent_empty_cells(int, int);
+
+	void menu() const;
+	void flushing_cin() const;
+	bool win_condition() const;
+	bool loss_condition(int, int);
 };
 
 #endif

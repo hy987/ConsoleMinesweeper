@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace std;
 
-Minesweeper::Minesweeper()
+Minesweeper::Minesweeper(): playing_field(MineField(0, 0, 0))
 {
 	state = UNINITIALIZED;
 }
@@ -14,27 +14,28 @@ void Minesweeper::set_mode()
 	int number, _height, _width, _mines;
 	do
 	{
-		cout << "Enter a number(1-5): ";
-		cin >> number;
 		if (!cin)
 			flushing_cin();
+
+		cout << "Enter a number(1-5): ";
+		cin >> number;
 	}
 	while(!cin || number < 1 || number > 5);
 
 	switch (number)
 	{
 	case 1:
-		playing_field.alter_minefield(9, 9, 10);
+		playing_field = MineField(9, 9, 10);
 		state = INITIALIZED;
 		break;
 	
 	case 2:
-		playing_field.alter_minefield(16, 16, 40);
+		playing_field = MineField(16, 16, 40);
 		state = INITIALIZED;
 		break;
 
 	case 3:
-		playing_field.alter_minefield(16, 30, 99);
+		playing_field = MineField(16, 30, 99);
 		state = INITIALIZED;
 		break;
 
@@ -58,14 +59,15 @@ void Minesweeper::set_mode()
 
 		do
 		{
-			cout << "Number of mines(less than " << _width * _height <<"): ";
-			cin >> _mines;
 			if (!cin)
 				flushing_cin();
+
+			cout << "Number of mines(less than " << _width * _height <<"): ";
+			cin >> _mines;
 		}
 		while (!cin || _mines > _width * _height);
 
-		playing_field.alter_minefield(_height, _width, _mines);
+		playing_field = MineField(_height, _width, _mines);
 		state = INITIALIZED;
 		break;
 
@@ -80,14 +82,9 @@ void Minesweeper::set_mode()
 	}
 }
 
-void Minesweeper::play_game()
+void Minesweeper::make_a_step(int& x_coordinate, int& y_coordinate, int& command) const
 {
-	int x_coordinate, y_coordinate, command;
-	set_mode();
-
-	while (state != EXIT)
-	{
-		do
+	do
 		{
 			system("cls");
 			
@@ -113,10 +110,21 @@ void Minesweeper::play_game()
 		}
 		while(!cin || x_coordinate < 0 || x_coordinate >= playing_field.get_height() || 
 			y_coordinate < 0 || y_coordinate >= playing_field.get_width() || command < 1 || command > 2);
+}
+
+void Minesweeper::play_game()
+{
+	int x_coordinate, y_coordinate, command;
+	set_mode();
+
+	while (state != EXIT)
+	{
+		make_a_step(x_coordinate, y_coordinate, command);
 
 		system("cls");
 
 		make_a_move(x_coordinate, y_coordinate, command);
+
 		playing_field.print();
 
 		if (loss_condition(x_coordinate, y_coordinate))
@@ -240,7 +248,7 @@ void Minesweeper::flushing_cin() const
 	cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 }
 
-bool Minesweeper::win_condition()
+bool Minesweeper::win_condition() const
 {
 	for (int i = 0; i < playing_field.get_height(); i++)
 	{

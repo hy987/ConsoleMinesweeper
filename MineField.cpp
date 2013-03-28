@@ -3,20 +3,12 @@
 #include <iomanip>
 using namespace std;
 
-MineField::MineField()
-{
-}
-
 MineField::MineField(int _height, int _width, int _mines): actual_field(_height, _width), visual_field(_height, _width)
 {
 	height = _height;
 	width = _width;
 	mines = _mines;
 
-	int random_x_coordinate;
-	int random_y_coordinate;
-	int mine_counter = 0;
-	
 	set_mines();
 	calculate_cells();
 }
@@ -56,19 +48,6 @@ void MineField::calculate_cells()
 		for (int j = 0; j < width; j++)
 			if (actual_field.get_cell_value(i, j) != -1)
 				actual_field.set_cell_value(i, j, check_surrounding_cells(i, j));
-}
-
-void MineField::alter_minefield(int new_height, int new_width, int new_mines)
-{
-	height = new_height;
-	width = new_width;
-	mines = new_mines;
-
-	actual_field.alter_matrix_size(new_height, new_width);
-	visual_field.alter_matrix_size(new_height, new_width);
-
-	set_mines();
-	calculate_cells();
 }
 
 int MineField::check_surrounding_cells(int x, int y) const
